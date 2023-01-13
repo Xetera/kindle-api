@@ -40,12 +40,14 @@ Both of those numbers should be the same.
 Upon creating the `Kindle` object, you'll load the first batch of books.
 
 ```js
+import { Kindle } from "kindle-api";
+
 const kindle = await Kindle.fromConfig({
   cookies: "ubid-main=xxx.xxxx ...",
   deviceToken: "(your-device-token)"
 });
 
-console.log(kindle.defaultBooks)
+console.log(kindle.defaultBooks);
 
 /*
 [
@@ -81,23 +83,23 @@ Here's an example of how you could implement a script that keeps track of your b
 import { setTimeout } from "node:timers"
 
 // assuming we saved our previous run
-const previous = await getPreviousData()
+const previous = await getPreviousData();
 
 // you can use `await kindle.books()` if you want to re-fetch your book list
 for (const book of kindle.defaultBooks) {
-  const details = await book.details()
+  const details = await book.details();
 
-  const readSinceLastTime = details.progress.syncDate > previous.get(details.asin).lastSync
+  const readSinceLastTime = details.progress.syncDate > previous.get(details.asin).lastSync;
 
   if (readSinceLastTime) {
     // make another request to fetch full book details
     // including reading progress
     const fullDetails = await book.fullDetails(details);
-    console.log(fullDetails.percentageRead) // 45
+    console.log(fullDetails.percentageRead); // 45
   }
 
   // add a delay after each book lookup to not spam and get banned
-  await setTimeout(5000)
+  await setTimeout(5000);
 }
 ```
 
