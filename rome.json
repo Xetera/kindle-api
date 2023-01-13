@@ -1,0 +1,13 @@
+{
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab",
+    "indentSize": 2
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true
+    }
+  }
+}

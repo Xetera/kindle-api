@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2021",
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "dist",
+    "module": "ESNext",
+    "declaration": true,
+    "lib": ["DOM", "ES2021"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "emitDeclarationOnly": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true
+  },
+  "include": ["src"],
+  "exclude": ["**/*.spec.ts"]
+}
