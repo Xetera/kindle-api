@@ -1,1 +1,10 @@
+src
+assets
+tsconfig.json
+rome.json
+vitest.config.ts
+# no need for lockfiles in libraries
+yarn.lock
+.nvmrc
+.env
 **/*.html
