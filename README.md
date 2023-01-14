@@ -33,10 +33,6 @@ Both of those numbers should be the same.
 
 ### Usage
 
-> **Important**
->
-> `kindle-api` only supports es modules (like fetch-v3). If you really need commonjs support you'll have to PR it yourself. Ideally, just upgrade to esm it's not a big deal
-
 Upon creating the `Kindle` object, you'll load the first batch of books.
 
 ```js

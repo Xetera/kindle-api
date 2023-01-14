@@ -1,20 +1,24 @@
 {
   "name": "kindle-api",
   "license": "MIT",
-  "version": "0.1.1",
-  "type": "module",
+  "version": "0.2.1",
+  "type": "commonjs",
   "types": "./dist/kindle.d.ts",
-  "main": "./dist/kindle.js",
+  "main": "./dist/cjs/kindle.js",
+  "module": "./dist/kindle.js",
   "exports": {
     ".": {
-      "import": "./dist/kindle.js"
+      "import": "./dist/kindle.js",
+      "require": "./dist/cjs/kindle.js"
     }
   },
   "scripts": {
     "dev": "yarn build:dev",
     "build": "esbuild src/*.ts --platform=node --format=esm --outdir=dist --target=es2021",
+    "build:cjs": "esbuild src/*.ts --platform=node --format=cjs --outdir=dist/cjs --target=es2021",
+    "build:all": "yarn build && yarn build:cjs && sh ./fixup.sh",
     "build:dev": "yarn build --watch",
-    "build:production": "tsc && yarn build",
+    "build:production": "tsc && tsc -p tsconfig.cjs.json && yarn build:all",
     "test": "vitest --threads=false"
   },
   "devDependencies": {
