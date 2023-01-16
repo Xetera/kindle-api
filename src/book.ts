@@ -91,6 +91,7 @@ export class KindleBook {
 			percentageRead,
 			releaseDate: meta.releaseDate,
 			startPosition: meta.startPosition,
+			endPosition: meta.endPosition,
 			publisher: meta.publisher,
 		};
 	}
@@ -157,5 +158,6 @@ export interface KindleBookDetails extends KindleBookLightDetails {
 	publisher?: string;
 	releaseDate: string;
 	startPosition: number;
+	endPosition: number;
 	percentageRead: number;
 }
