@@ -76,7 +76,7 @@ console.log(kindle.defaultBooks);
 Here's an example of how you could implement a script that keeps track of your book progress
 
 ```ts
-import { setTimeout } from "node:timers"
+import { setTimeout } from "node:timers/promises"
 
 // assuming we saved our previous run
 const previous = await getPreviousData();
