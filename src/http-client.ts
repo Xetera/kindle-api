@@ -8,14 +8,25 @@ export const USER_AGENT =
 
 const JSONP_REGEX = /\(({.*})\)/;
 
+/**
+ * HTTPClient for doing http requests
+ * Can be initialized with a custom CycleTLSClient
+ */
 export class HttpClient {
 	private sessionId?: string;
 	private adpSessionId?: string;
 
-	constructor(private readonly session: KindleRequiredCookies) {}
+	constructor(
+		private readonly cookies: KindleRequiredCookies,
+		private readonly client: CycleTLSClient,
+	) {}
+
+	static async initialize(cookies: KindleRequiredCookies) {
+		const client = await TLSClient.instance();
+		return new this(cookies, client);
+	}
 
 	async request(url: string, args?: Parameters<CycleTLSClient>[1]) {
-		const client = await TLSClient.instance();
 		const headers: Record<string, string> = {
 			Cookie: this.serializeCookies(),
 			...args?.headers,
@@ -27,7 +38,7 @@ export class HttpClient {
 		if (this.adpSessionId) {
 			headers["x-adp-session-token"] = this.adpSessionId;
 		}
-		return client(url, {
+		return this.client(url, {
 			...args,
 			headers,
 			userAgent: USER_AGENT,
@@ -63,7 +74,7 @@ export class HttpClient {
 	}
 
 	serializeCookies(): string {
-		return Object.entries(this.session)
+		return Object.entries(this.cookies)
 			.map(
 				([key, value]) =>
 					`${key.replace(/[A-Z]/g, (v) => `-${v.toLowerCase()}`)}=${value}`,
@@ -83,11 +94,13 @@ export class HttpClient {
 export class TLSClient {
 	private static client?: CycleTLSClient;
 
-	static async instance(): Promise<CycleTLSClient> {
+	static async instance(
+		params?: Parameters<typeof initCycleTLS>[0],
+	): Promise<CycleTLSClient> {
 		if (TLSClient.client) {
 			return TLSClient.client;
 		}
-		const client = await initCycleTLS();
+		const client = await initCycleTLS(params);
 		TLSClient.client = client;
 
 		return client;

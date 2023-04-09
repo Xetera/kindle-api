@@ -1,6 +1,8 @@
+import { CycleTLSClient } from "cycletls";
 import { KindleBook, KindleBookData } from "./book.js";
 import { KindleRequiredCookies, HttpClient, TLSClient } from "./http-client.js";
 
+export { TLSClient } from "./http-client.js";
 export type { KindleBook, KindleBookDetails } from "./book.js";
 export type { KindleOwnedBookMetadataResponse } from "./book-metadata";
 
@@ -13,6 +15,7 @@ export type KindleConfiguration = {
 	deviceToken: string;
 	// Optional
 	clientVersion?: string;
+	httpClient?: CycleTLSClient;
 };
 
 export type KindleOptions = {
@@ -64,7 +67,9 @@ export class Kindle {
 			typeof config.cookies === "string"
 				? Kindle.deserializeCookies(config.cookies)
 				: config.cookies;
-		const client = new HttpClient(cookies);
+		const client = config.httpClient
+			? new HttpClient(cookies, config.httpClient)
+			: await HttpClient.initialize(cookies);
 
 		const { sessionId, books } = await Kindle.baseRequest(client);
 		client.updateSession(sessionId);
