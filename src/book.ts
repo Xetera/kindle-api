@@ -106,6 +106,15 @@ export class KindleBook {
 			const [lastName, firstName] = name
 				.split(",")
 				.map((elems) => elems.trim());
+
+      // sometimes an author only has one name like "Maddox"
+      if (!firstName) {
+        return {
+          firstName: lastName,
+          lastName: ""
+        }
+      }
+
 			return {
 				firstName,
 				lastName,

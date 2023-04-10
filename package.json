@@ -1,7 +1,7 @@
 {
   "name": "kindle-api",
   "license": "MIT",
-  "version": "0.2.3",
+  "version": "0.2.6",
   "type": "commonjs",
   "types": "./dist/kindle.d.ts",
   "main": "./dist/cjs/kindle.js",
