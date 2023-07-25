@@ -1,22 +1,24 @@
 # Kindle-Api
 
-A blazing fast library for Amazon Kindle's private API built without headless browsers.
+A zero dependency, blazing fast library for Amazon Kindle's private API built without headless browsers.
 
 ## Installation
 
 ```
-yarn add kindle-api
+pnpm add kindle-api
 ```
 
 ## Setup
 
+Ok I kinda lied about the zero dependency part. The library does actually depend on an external [tls-client-api](https://github.com/bogdanfinn/tls-client-api) to proxy requests due to amazon's recent changes to their TLS fingerprinting in July 2023. You'll need to run the server locally to be able to use this library. It's quite easy to set up and have one running in a few minutes and will save you tons of headache if you wanna do other kinds of scraping in the future
 
 ### Cookies
 
-Amazon's login system is quite strict and the SMS 2FA makes automating logins difficult. Instead of trying to automate that with puppeteer and slow things down, we use 3 cookies that stay valid for an entire year.
+Amazon's login system is quite strict and the SMS 2FA makes automating logins difficult. Instead of trying to automate that with puppeteer and slow things down, we use 4 cookies that stay valid for an entire year.
 
 - `ubid-main`
 - `at-main`
+- `x-main`
 - `session-id`
 
 You can grab these values directly by going on inspect element after loading [read.amazon.com](https://read.amazon.com) and copying the entire thing or just the select ones ![](./assets/cookie-demonstration.png)
@@ -40,7 +42,11 @@ import { Kindle } from "kindle-api";
 
 const kindle = await Kindle.fromConfig({
   cookies: "ubid-main=xxx.xxxx ...",
-  deviceToken: "(your-device-token)"
+  deviceToken: "(your-device-token)",
+  tlsServer: {
+    url: "https://your-tls-server-api.com",
+    apiKey: "(your-api-key)",
+  },
 });
 
 console.log(kindle.defaultBooks);
@@ -76,7 +82,7 @@ console.log(kindle.defaultBooks);
 Here's an example of how you could implement a script that keeps track of your book progress
 
 ```ts
-import { setTimeout } from "node:timers/promises"
+import { setTimeout } from "node:timers/promises";
 
 // assuming we saved our previous run
 const previous = await getPreviousData();
@@ -85,7 +91,8 @@ const previous = await getPreviousData();
 for (const book of kindle.defaultBooks) {
   const details = await book.details();
 
-  const readSinceLastTime = details.progress.syncDate > previous.get(details.asin).lastSync;
+  const readSinceLastTime =
+    details.progress.syncDate > previous.get(details.asin).lastSync;
 
   if (readSinceLastTime) {
     // make another request to fetch full book details
@@ -98,12 +105,6 @@ for (const book of kindle.defaultBooks) {
   await setTimeout(5000);
 }
 ```
-
-## Important Details
-
-kindle-api works through [cycletls](https://github.com/Danny-Dasilva/CycleTLS) because Amazon uses TLS fingerprinting to detect bots on their kindle website. Because of that, we have to run a webserver locally to allow requests to be done through go instead.
-
-That might cause problems running multiple instances of the library as they will all try to use the same port number.
 
 ## Missing features
 

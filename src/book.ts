@@ -3,6 +3,7 @@ import {
   KindleOwnedBookMetadataResponse,
 } from "./book-metadata.js";
 import { HttpClient } from "./http-client.js";
+import { TLSClientResponseData } from "./tls-client-api.js";
 
 export class KindleBook {
   public readonly title: string;
@@ -43,7 +44,9 @@ export class KindleBook {
         this.asin
       }&clientVersion=${this.#version}`
     );
-    const info = response.body as KindleOwnedBookMetadataResponse;
+    const info = JSON.parse(
+      (await response.json()).body
+    ) as KindleOwnedBookMetadataResponse;
 
     return {
       title: this.title,
@@ -53,9 +56,10 @@ export class KindleBook {
       formatVersion: info.formatVersion,
       mangaOrComicAsin: this.mangaOrComicAsin,
       originType: this.originType,
+      /** deprecated */
       productUrl: this.productUrl,
       coverUrl: this.productUrl,
-      largeCoverUrl: this.productUrl.replace(/_SY\d+_/g, "."),
+      largeCoverUrl: KindleBook.toLargeImage(this.productUrl),
       metadataUrl: info.metadataUrl,
       progress: {
         reportedOnDevice: info.lastPageReadData.deviceName,
@@ -77,11 +81,13 @@ export class KindleBook {
     const info = partialDetails ?? (await this.details());
     const data = await this.#client.request(info.metadataUrl);
 
+    const response = (await data.json()) as TLSClientResponseData;
+
     const meta =
-      this.#client.parseJsonpResponse<KindleBookMetadataResponse>(data);
+      this.#client.parseJsonpResponse<KindleBookMetadataResponse>(response);
 
     if (!meta) {
-      throw Error("Somerthing went wrong fetching book metadata");
+      throw Error("Something went wrong fetching book metadata");
     }
 
     const roughDecimal =
@@ -100,7 +106,7 @@ export class KindleBook {
     };
   }
 
-  private static normalizeAuthors(rawAuthors: string[]): KindleAuthor[] {
+  static normalizeAuthors(rawAuthors: string[]): KindleAuthor[] {
     if (rawAuthors.length === 0) {
       return [];
     }
@@ -124,6 +130,10 @@ export class KindleBook {
         lastName,
       };
     });
+  }
+
+  static toLargeImage(url: string): string {
+    return url.replace(/\._SY\d+_\./g, ".");
   }
 }
 
