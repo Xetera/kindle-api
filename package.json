@@ -1,7 +1,7 @@
 {
   "name": "kindle-api",
   "license": "MIT",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "type": "commonjs",
   "types": "./dist/kindle.d.ts",
   "main": "./dist/cjs/kindle.js",
@@ -13,12 +13,12 @@
     }
   },
   "scripts": {
-    "dev": "yarn build:dev",
+    "dev": "pnpm run build:dev",
     "build": "esbuild src/*.ts --platform=node --format=esm --outdir=dist --target=es2021",
     "build:cjs": "esbuild src/*.ts --platform=node --format=cjs --outdir=dist/cjs --target=es2021",
-    "build:all": "yarn build && yarn build:cjs && sh ./fixup.sh",
-    "build:dev": "yarn build --watch",
-    "build:production": "tsc && tsc -p tsconfig.cjs.json && yarn build:all",
+    "build:all": "pnpm run build && yarn build:cjs && sh ./fixup.sh",
+    "build:dev": "pnpm run build --watch",
+    "build:production": "tsc && tsc -p tsconfig.cjs.json && pnpm run build:all",
     "test": "NODE_OPTIONS='-r dotenv/config'  vitest --threads=false"
   },
   "devDependencies": {

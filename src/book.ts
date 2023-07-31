@@ -14,6 +14,7 @@ export class KindleBook {
   public readonly productUrl: string;
   public readonly mangaOrComicAsin: boolean;
   public readonly webReaderUrl: string;
+  public readonly resourceType: string;
 
   readonly #client: HttpClient;
   readonly #version: string;
@@ -24,6 +25,7 @@ export class KindleBook {
     this.imageUrl = options.productUrl;
     this.asin = options.asin;
     this.originType = options.originType;
+    this.resourceType = options.resourceType;
     this.mangaOrComicAsin = options.mangaOrComicAsin;
     this.webReaderUrl = options.webReaderUrl;
     this.productUrl = options.productUrl;
@@ -151,6 +153,7 @@ export interface KindleBookData {
   asin: string;
   authors: string[];
   mangaOrComicAsin: boolean;
+  resourceType: "EBOOK" | "EBOOK_SAMPLE" | (string & {});
   originType: string;
   /* this is always 0 */
   percentageRead: number;
