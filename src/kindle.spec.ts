@@ -29,5 +29,5 @@ test(
     expect(kindle.defaultBooks).toBeDefined();
     console.log(await kindle.defaultBooks[3].fullDetails());
   },
-  { timeout: 50000 }
+  { timeout: 50000 },
 );

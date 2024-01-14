@@ -18,10 +18,13 @@ export class HttpClient {
 
   constructor(
     private readonly cookies: KindleRequiredCookies,
-    private readonly clientOptions: TlsClientConfig
+    private readonly clientOptions: TlsClientConfig,
   ) {}
 
-  async request(url: string, payload?: TLSClientRequestPayload) {
+  private async _request(
+    url: string,
+    payload?: TLSClientRequestPayload,
+  ): Promise<Response> {
     const headers: Record<string, string> = {
       Cookie: this.serializeCookies(),
       "Accept-Language": "en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7",
@@ -46,7 +49,7 @@ export class HttpClient {
         headers,
       } satisfies TLSClientRequestPayload,
       null,
-      2
+      2,
     );
 
     return fetch(`${this.clientOptions.url}/api/forward`, {
@@ -56,6 +59,17 @@ export class HttpClient {
         "x-api-key": this.clientOptions.apiKey,
       },
     });
+  }
+
+  public async request(
+    url: string,
+    payload?: TLSClientRequestPayload,
+  ): Promise<TLSClientResponseData> {
+    const response = await this._request(url, payload);
+
+    const json = await response.json();
+
+    return json as TLSClientResponseData;
   }
 
   parseJsonpResponse<T>(response: TLSClientResponseData): T | undefined {
@@ -75,6 +89,14 @@ export class HttpClient {
     this.adpSessionId = id;
   }
 
+  getSessionId(): string | undefined {
+    return this.sessionId;
+  }
+
+  getAdpSessionId(): string | undefined {
+    return this.adpSessionId;
+  }
+
   extractSetCookies(response: TLSClientResponseData): Record<string, string> {
     return response.cookies;
   }
@@ -83,7 +105,7 @@ export class HttpClient {
     return Object.entries(this.cookies)
       .map(
         ([key, value]) =>
-          `${key.replace(/[A-Z]/g, (v) => `-${v.toLowerCase()}`)}=${value}`
+          `${key.replace(/[A-Z]/g, (v) => `-${v.toLowerCase()}`)}=${value}`,
       )
       .join("; ")
       .trim();

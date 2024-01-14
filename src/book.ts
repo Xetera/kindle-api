@@ -3,7 +3,6 @@ import {
   KindleOwnedBookMetadataResponse,
 } from "./book-metadata.js";
 import { HttpClient } from "./http-client.js";
-import { TLSClientResponseData } from "./tls-client-api.js";
 
 export class KindleBook {
   public readonly title: string;
@@ -42,13 +41,9 @@ export class KindleBook {
    */
   async details(): Promise<KindleBookLightDetails> {
     const response = await this.#client.request(
-      `https://read.amazon.com/service/mobile/reader/startReading?asin=${
-        this.asin
-      }&clientVersion=${this.#version}`
+      `https://read.amazon.com/service/mobile/reader/startReading?asin=${this.asin}&clientVersion=${this.#version}`,
     );
-    const info = JSON.parse(
-      (await response.json()).body
-    ) as KindleOwnedBookMetadataResponse;
+    const info = JSON.parse(response.body) as KindleOwnedBookMetadataResponse;
 
     return {
       title: this.title,
@@ -78,12 +73,10 @@ export class KindleBook {
    * Fires 2 http requests under the hood if previous details not given.
    */
   async fullDetails(
-    partialDetails?: KindleBookLightDetails
+    partialDetails?: KindleBookLightDetails,
   ): Promise<KindleBookDetails> {
     const info = partialDetails ?? (await this.details());
-    const data = await this.#client.request(info.metadataUrl);
-
-    const response = (await data.json()) as TLSClientResponseData;
+    const response = await this.#client.request(info.metadataUrl);
 
     const meta =
       this.#client.parseJsonpResponse<KindleBookMetadataResponse>(response);
