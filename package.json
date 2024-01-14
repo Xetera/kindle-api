@@ -23,7 +23,6 @@
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
-    "eclint": "^2.8.1",
     "esbuild": "^0.16.17",
     "typescript": "^4.9.3",
     "vitest": "^0.27.1"
