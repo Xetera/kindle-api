@@ -36,7 +36,7 @@ export type KindleConfiguration = {
    */
   clientFactory?: (
     cookies: KindleRequiredCookies,
-    clientOptions: TlsClientConfig,
+    clientOptions: TlsClientConfig
   ) => HttpClient;
 };
 
@@ -60,7 +60,7 @@ export class Kindle {
   } satisfies Query);
   public static readonly DEFAULT_FILTER = Object.freeze({
     querySize: 50,
-    firstPageOnly: true,
+    fetchAllPages: false,
   } satisfies Filter);
 
   /**
@@ -78,7 +78,7 @@ export class Kindle {
     client: HttpClient,
     // not necessary for initialization (if called from the outside)
     // so we're leaving this nullable
-    prePopulatedBooks?: KindleBook[],
+    prePopulatedBooks?: KindleBook[]
   ) {
     this.defaultBooks = prePopulatedBooks ?? [];
     this.#client = client;
@@ -95,6 +95,7 @@ export class Kindle {
 
     const { sessionId, books } = await Kindle.baseRequest(client);
     client.updateSession(sessionId);
+
     const deviceInfo = await Kindle.deviceToken(client, config.deviceToken);
     client.updateAdpSession(deviceInfo.deviceSessionToken);
 
@@ -107,13 +108,13 @@ export class Kindle {
         sessionId,
       },
       client,
-      books,
+      books
     );
   }
 
   static async deviceToken(
     client: HttpClient,
-    token: string,
+    token: string
   ): Promise<KindleDeviceInfo> {
     const params = new URLSearchParams({
       serialNumber: token,
@@ -130,7 +131,7 @@ export class Kindle {
     args?: {
       query?: Query;
       filter?: Filter;
-    },
+    }
   ): Promise<{
     books: KindleBook[];
     sessionId: string;
@@ -153,7 +154,7 @@ export class Kindle {
       const { books, sessionId, paginationToken } = await fetchBooks(
         client,
         url,
-        version,
+        version
       );
 
       latestSessionId = sessionId;
@@ -164,7 +165,7 @@ export class Kindle {
       filter.paginationToken = paginationToken;
     } while (
       filter.paginationToken !== undefined &&
-      filter.firstPageOnly === false
+      filter.fetchAllPages === true
     );
 
     return {
@@ -189,15 +190,10 @@ export class Kindle {
     const values = cookies
       .split(";")
       .map((v) => v.split("="))
-      .reduce(
-        (acc, [key, value]) => {
-          acc[decodeURIComponent(key.trim())] = decodeURIComponent(
-            value.trim(),
-          );
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
+      .reduce((acc, [key, value]) => {
+        acc[decodeURIComponent(key.trim())] = decodeURIComponent(value.trim());
+        return acc;
+      }, {} as Record<string, string>);
 
     return {
       atMain: values["at-main"],

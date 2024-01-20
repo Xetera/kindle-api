@@ -1,8 +1,9 @@
 export interface Query {
   /**
-   * sortType
+   * Defines the order of the results.
+   * The default is "recency".
    */
-  sortType:
+  sortType?:
     | "recency"
     | "title"
     | "author"
@@ -13,10 +14,12 @@ export interface Query {
 export interface Filter {
   /**
    * Filter by abonnement.
+   * By default, the filter is unset.
    */
   originType?: "KINDLE_UNLIMITED" | "PRIME" | "COMICS_UNLIMITED";
   /**
    * Request the next page of results.
+   * This is returned in the response of the previous request and is usually used internally when @see fetchAllPages is true.
    */
   paginationToken?: string;
   /**
@@ -25,8 +28,10 @@ export interface Filter {
    */
   querySize?: number;
   /**
-   * When false, pagination is enabled and all results are returned.
-   * The default is false and only the first page of results is returned.
+   * The results of the kindle api are paginated, by default only the first page is fetched.
+   * When true, all results will be fetched if neccessary.
+   * This will result in multiple requests to the kindle api (one for each page).
+   * The default value is false.
    */
-  firstPageOnly?: boolean;
+  fetchAllPages?: boolean;
 }

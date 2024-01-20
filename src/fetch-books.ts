@@ -6,7 +6,7 @@ import { Query, Filter } from "./query-filter";
 export async function fetchBooks(
   client: HttpClient,
   url: string,
-  version?: string,
+  version?: string
 ): Promise<{
   books: KindleBook[];
   sessionId: string;
@@ -35,9 +35,10 @@ export function toUrl(query: Query, filter: Filter): string {
     ...query,
     ...filter,
   };
+
   for (const [key, value] of Object.entries(searchParams)) {
-    if (key === "firstPageOnly") {
-      continue; // limit query is internal only and not part of the kindle api
+    if (key === "fetchAllPages") {
+      continue; // pagination handling is internal only and not part of the kindle api
     }
 
     if (value !== undefined) {
