@@ -18,12 +18,12 @@ export class HttpClient {
 
   constructor(
     private readonly cookies: KindleRequiredCookies,
-    private readonly clientOptions: TlsClientConfig,
+    private readonly clientOptions: TlsClientConfig
   ) {}
 
   private async _request(
     url: string,
-    payload?: TLSClientRequestPayload,
+    payload?: TLSClientRequestPayload
   ): Promise<Response> {
     const headers: Record<string, string> = {
       Cookie: this.serializeCookies(),
@@ -49,7 +49,7 @@ export class HttpClient {
         headers,
       } satisfies TLSClientRequestPayload,
       null,
-      2,
+      2
     );
 
     return fetch(`${this.clientOptions.url}/api/forward`, {
@@ -63,7 +63,7 @@ export class HttpClient {
 
   public async request(
     url: string,
-    payload?: TLSClientRequestPayload,
+    payload?: TLSClientRequestPayload
   ): Promise<TLSClientResponseData> {
     const response = await this._request(url, payload);
 
@@ -105,7 +105,7 @@ export class HttpClient {
     return Object.entries(this.cookies)
       .map(
         ([key, value]) =>
-          `${key.replace(/[A-Z]/g, (v) => `-${v.toLowerCase()}`)}=${value}`,
+          `${key.replace(/[A-Z]/g, (v) => `-${v.toLowerCase()}`)}=${value}`
       )
       .join("; ")
       .trim();
