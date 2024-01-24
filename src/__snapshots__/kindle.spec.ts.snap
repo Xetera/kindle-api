@@ -1,0 +1,134 @@
+// Vitest Snapshot v1
+
+exports[`pagination > should fetch all books when fetchAllPages=true 1`] = `
+[
+  KindleBook {
+    "asin": "B000FBJG4U",
+    "authors": [
+      {
+        "firstName": "Jules Verne",
+        "lastName": "",
+      },
+    ],
+    "imageUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "mangaOrComicAsin": false,
+    "originType": "purchased",
+    "productUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "resourceType": "EBOOK",
+    "title": "Journey to the Center of the Earth",
+    "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B000FBJG4U&id=wRj3DwAAQBAJ",
+  },
+  KindleBook {
+    "asin": "B08R3YVH53",
+    "authors": [
+      {
+        "firstName": "F. Scott Fitzgerald",
+        "lastName": "",
+      },
+    ],
+    "imageUrl": "https://www.amazon.com/dp/B08R3YVH53",
+    "mangaOrComicAsin": false,
+    "originType": "sampled",
+    "productUrl": "https://www.amazon.com/dp/B08R3YVH53",
+    "resourceType": "EBOOK_SAMPLE",
+    "title": "The Great Gatsby",
+    "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B08R3YVH53&id=wRj3DwAAQBAJ",
+  },
+]
+`;
+
+exports[`pagination > should only get the first page of book results when { fetchAllPages: false } 1`] = `
+[
+  KindleBook {
+    "asin": "B000FBJG4U",
+    "authors": [
+      {
+        "firstName": "Jules Verne",
+        "lastName": "",
+      },
+    ],
+    "imageUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "mangaOrComicAsin": false,
+    "originType": "purchased",
+    "productUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "resourceType": "EBOOK",
+    "title": "Journey to the Center of the Earth",
+    "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B000FBJG4U&id=wRj3DwAAQBAJ",
+  },
+]
+`;
+
+exports[`pagination > should only get the first page of book results when { fetchAllPages: undefined } 1`] = `
+[
+  KindleBook {
+    "asin": "B000FBJG4U",
+    "authors": [
+      {
+        "firstName": "Jules Verne",
+        "lastName": "",
+      },
+    ],
+    "imageUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "mangaOrComicAsin": false,
+    "originType": "purchased",
+    "productUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "resourceType": "EBOOK",
+    "title": "Journey to the Center of the Earth",
+    "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B000FBJG4U&id=wRj3DwAAQBAJ",
+  },
+]
+`;
+
+exports[`should fetch first page when created 1`] = `
+[
+  KindleBook {
+    "asin": "B000FBJG4U",
+    "authors": [
+      {
+        "firstName": "Jules Verne",
+        "lastName": "",
+      },
+    ],
+    "imageUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "mangaOrComicAsin": false,
+    "originType": "purchased",
+    "productUrl": "https://www.amazon.com/dp/B000FBJG4U",
+    "resourceType": "EBOOK",
+    "title": "Journey to the Center of the Earth",
+    "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B000FBJG4U&id=wRj3DwAAQBAJ",
+  },
+]
+`;
+
+exports[`should fetch first page when created 2`] = `
+{
+  "asin": "B000FBJG4U",
+  "authors": [
+    {
+      "firstName": "Jules Verne",
+      "lastName": "",
+    },
+  ],
+  "bookType": "owned",
+  "coverUrl": "https://www.amazon.com/dp/B000FBJG4U",
+  "endPosition": 100,
+  "formatVersion": "1.0",
+  "largeCoverUrl": "https://www.amazon.com/dp/B000FBJG4U",
+  "mangaOrComicAsin": false,
+  "metadataUrl": "https://read.amazon.com/service/metadata/lookup?asin=B000FBJG4U&metadataVersion=1",
+  "originType": "purchased",
+  "percentageRead": 1,
+  "productUrl": "https://www.amazon.com/dp/B000FBJG4U",
+  "progress": {
+    "position": 0,
+    "reportedOnDevice": "Kindle Reader",
+    "syncDate": 1970-01-01T00:00:00.000Z,
+  },
+  "publisher": "Public Domain Books",
+  "releaseDate": "2009-04-01T00:00:00.000Z",
+  "srl": 0,
+  "startPosition": 1,
+  "title": "Journey to the Center of the Earth",
+  "webReaderUrl": "https://read.amazon.com/kp/kshare?asin=B000FBJG4U&id=wRj3DwAAQBAJ",
+}
+`;

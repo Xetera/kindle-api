@@ -21,7 +21,10 @@ export class HttpClient {
     private readonly clientOptions: TlsClientConfig
   ) {}
 
-  async request(url: string, payload?: TLSClientRequestPayload) {
+  private async _request(
+    url: string,
+    payload?: TLSClientRequestPayload
+  ): Promise<Response> {
     const headers: Record<string, string> = {
       Cookie: this.serializeCookies(),
       "Accept-Language": "en-US,en;q=0.9,ko-KR;q=0.8,ko;q=0.7",
@@ -58,6 +61,17 @@ export class HttpClient {
     });
   }
 
+  public async request(
+    url: string,
+    payload?: TLSClientRequestPayload
+  ): Promise<TLSClientResponseData> {
+    const response = await this._request(url, payload);
+
+    const json = await response.json();
+
+    return json as TLSClientResponseData;
+  }
+
   parseJsonpResponse<T>(response: TLSClientResponseData): T | undefined {
     const content = response.body.match(JSONP_REGEX)?.[1];
     if (!content) {
@@ -73,6 +87,14 @@ export class HttpClient {
 
   updateAdpSession(id: string): void {
     this.adpSessionId = id;
+  }
+
+  getSessionId(): string | undefined {
+    return this.sessionId;
+  }
+
+  getAdpSessionId(): string | undefined {
+    return this.adpSessionId;
   }
 
   extractSetCookies(response: TLSClientResponseData): Record<string, string> {

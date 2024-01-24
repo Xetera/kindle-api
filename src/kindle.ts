@@ -1,13 +1,24 @@
-import { KindleBook, KindleBookData } from "./book.js";
+import { KindleBook } from "./book.js";
+import { fetchBooks, toUrl } from "./fetch-books.js";
 import {
   KindleRequiredCookies,
   HttpClient,
   TlsClientConfig,
 } from "./http-client.js";
-import { TLSClientResponseData } from "./tls-client-api.js";
+import { Filter, Query } from "./query-filter.js";
 
 export type { KindleBook, KindleBookDetails } from "./book.js";
 export type { KindleOwnedBookMetadataResponse } from "./book-metadata";
+
+export {
+  HttpClient,
+  type KindleRequiredCookies,
+  type TlsClientConfig,
+} from "./http-client.js";
+export type {
+  TLSClientRequestPayload,
+  TLSClientResponseData,
+} from "./tls-client-api";
 
 export type KindleConfiguration = {
   /**
@@ -19,6 +30,14 @@ export type KindleConfiguration = {
   // Optional
   clientVersion?: string;
   tlsServer: TlsClientConfig;
+
+  /**
+   * Factory that creates or returns a custom instance of http client.
+   */
+  clientFactory?: (
+    cookies: KindleRequiredCookies,
+    clientOptions: TlsClientConfig
+  ) => HttpClient;
 };
 
 export type KindleOptions = {
@@ -36,6 +55,13 @@ export class Kindle {
     "https://read.amazon.com/service/web/register/getDeviceToken";
   public static readonly BOOKS_URL =
     "https://read.amazon.com/kindle-library/search?query=&libraryType=BOOKS&sortType=recency&querySize=50";
+  public static readonly DEFAULT_QUERY = Object.freeze({
+    sortType: "acquisition_desc",
+  } satisfies Query);
+  public static readonly DEFAULT_FILTER = Object.freeze({
+    querySize: 50,
+    fetchAllPages: false,
+  } satisfies Filter);
 
   /**
    * The default list of books fetched when setting up {@link Kindle}
@@ -63,10 +89,13 @@ export class Kindle {
       typeof config.cookies === "string"
         ? Kindle.deserializeCookies(config.cookies)
         : config.cookies;
-    const client = new HttpClient(cookies, config.tlsServer);
+    const client =
+      config.clientFactory?.(cookies, config.tlsServer) ??
+      new HttpClient(cookies, config.tlsServer);
 
     const { sessionId, books } = await Kindle.baseRequest(client);
     client.updateSession(sessionId);
+
     const deviceInfo = await Kindle.deviceToken(client, config.deviceToken);
     client.updateAdpSession(deviceInfo.deviceSessionToken);
 
@@ -93,40 +122,63 @@ export class Kindle {
     });
     const url = `${Kindle.DEVICE_TOKEN_URL}?${params.toString()}`;
     const response = await client.request(url);
-    return JSON.parse(
-      ((await response.json()) as TLSClientResponseData).body
-    ) as KindleDeviceInfo;
+    return JSON.parse(response.body) as KindleDeviceInfo;
   }
 
   static async baseRequest(
     client: HttpClient,
-    version?: string
+    version?: string,
+    args?: {
+      query?: Query;
+      filter?: Filter;
+    }
   ): Promise<{
     books: KindleBook[];
     sessionId: string;
   }> {
-    type Response = {
-      itemsList: KindleBookData[];
+    const query = {
+      ...Kindle.DEFAULT_QUERY,
+      ...args?.query,
+    };
+    const filter = {
+      ...Kindle.DEFAULT_FILTER,
+      ...args?.filter,
     };
 
-    const response = await client.request(Kindle.BOOKS_URL);
+    let allBooks: KindleBook[] = [];
+    let latestSessionId: string | undefined;
 
-    const json = await response.json();
-    const resp = json as TLSClientResponseData;
-    const newCookies = client.extractSetCookies(resp);
-    const sessionId = newCookies["session-id"];
+    // loop until we get less than the requested amount of books or hit the limit
+    do {
+      const url = toUrl(query, filter);
+      const { books, sessionId, paginationToken } = await fetchBooks(
+        client,
+        url,
+        version
+      );
 
-    const body = JSON.parse(resp.body) as Response;
+      latestSessionId = sessionId;
+
+      allBooks = [...allBooks, ...books];
+
+      // update offset
+      filter.paginationToken = paginationToken;
+    } while (
+      filter.paginationToken !== undefined &&
+      filter.fetchAllPages === true
+    );
+
     return {
-      books: body.itemsList.map(
-        (book) => new KindleBook(book, client, version)
-      ),
-      sessionId,
+      books: allBooks,
+      sessionId: latestSessionId,
     };
   }
 
-  async books(): Promise<KindleBook[]> {
-    const result = await Kindle.baseRequest(this.#client);
+  async books(args?: {
+    query?: Query;
+    filter?: Filter;
+  }): Promise<KindleBook[]> {
+    const result = await Kindle.baseRequest(this.#client, undefined, args);
     // refreshing the internal session every time books is called.
     // This doesn't prevent us from calling the books endpoint but
     // it does prevent requesting the metadata of individual books
