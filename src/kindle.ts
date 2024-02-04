@@ -29,6 +29,9 @@ export type {
   TLSClientResponseData,
 } from "./tls-client-api.js";
 
+export { AuthSessionError } from "./errors/auth-session-error.js";
+export { UnexpectedResponseError } from "./errors/unexpected-response-error.js";
+
 export type KindleConfiguration = {
   /**
    * Cookie string copied from your browser or exact
