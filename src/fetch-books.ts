@@ -1,4 +1,6 @@
 import { KindleBook, KindleBookData } from "./book.js";
+import { AuthSessionError } from "./errors/auth-session-error.js";
+import { UnexpectedResponseError } from "./errors/unexpected-response-error.js";
 import { HttpClient } from "./http-client.js";
 import { Kindle } from "./kindle.js";
 import { Query, Filter } from "./query-filter.js";
@@ -18,6 +20,13 @@ export async function fetchBooks(
   };
 
   const resp = await client.request(url);
+
+  if (AuthSessionError.isSignInRedirect(resp)) {
+    throw AuthSessionError.sessionExpired(resp);
+  } else if (!UnexpectedResponseError.isOk(resp)) {
+    throw UnexpectedResponseError.unexpectedStatusCode(resp);
+  }
+
   const newCookies = client.extractSetCookies(resp);
   const sessionId = newCookies["session-id"];
 

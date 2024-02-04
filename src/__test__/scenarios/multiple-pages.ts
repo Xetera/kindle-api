@@ -23,6 +23,7 @@ export const multiplePages = {
       headers: {},
       status: 200,
       body: {
+        status: 200,
         cookies: {
           "session-id": "2",
         },
@@ -55,6 +56,7 @@ export const multiplePages = {
       headers: {},
       status: 200,
       body: {
+        status: 200,
         cookies: {
           "session-id": "2",
         },
