@@ -1,11 +1,11 @@
 import "dotenv/config";
 import { test, expect, describe } from "vitest";
-import { Kindle, KindleConfiguration } from "./kindle";
-import { useScenario } from "./__test__/scenario";
-import { singleBook } from "./__test__/scenarios/single-book";
-import { multiplePages } from "./__test__/scenarios/multiple-pages";
-import { startSession } from "./__test__/scenarios/start-session";
-import { Filter } from "./query-filter";
+import { Kindle, KindleConfiguration } from "./kindle.js";
+import { useScenario } from "./__test__/scenario.js";
+import { singleBook } from "./__test__/scenarios/single-book.js";
+import { multiplePages } from "./__test__/scenarios/multiple-pages.js";
+import { startSession } from "./__test__/scenarios/start-session.js";
+import { Filter } from "./query-filter.js";
 
 const cookies = process.env.COOKIES;
 

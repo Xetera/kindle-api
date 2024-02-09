@@ -1,8 +1,8 @@
-import { KindleBookData } from "../../../book";
+import { KindleBookData } from "../../../book.js";
 import {
   KindleBookMetadataResponse,
   KindleOwnedBookMetadataResponse,
-} from "../../../book-metadata";
+} from "../../../book-metadata.js";
 
 export const sample1: KindleBookData = {
   title: "Journey to the Center of the Earth",

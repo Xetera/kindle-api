@@ -1,8 +1,8 @@
-import { Scenario } from "../scenario";
+import { Scenario } from "../scenario.js";
 import { faker } from "@faker-js/faker";
-import { defaultRequestBody } from "./fixtures/default-request-body";
-import { sessionToken } from "./fixtures/tokens";
-import { KindleBookData } from "../../book";
+import { defaultRequestBody } from "./fixtures/default-request-body.js";
+import { sessionToken } from "./fixtures/tokens.js";
+import { KindleBookData } from "../../book.js";
 
 export function startSession({ books }: { books?: KindleBookData[] } = {}) {
   return {

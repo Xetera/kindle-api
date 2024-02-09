@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "useDefineForClassFields": true,
+    "allowSyntheticDefaultImports": true,
+    "declaration": true,
+    "lib": ["DOM", "ES2021"],
+    "strict": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "skipLibCheck": true
+  }
+}
