@@ -41,7 +41,9 @@ export class KindleBook {
    */
   async details(): Promise<KindleBookLightDetails> {
     const response = await this.#client.request(
-      `https://read.amazon.com/service/mobile/reader/startReading?asin=${this.asin}&clientVersion=${this.#version}`,
+      `https://read.amazon.com/service/mobile/reader/startReading?asin=${
+        this.asin
+      }&clientVersion=${this.#version}`
     );
     const info = JSON.parse(response.body) as KindleOwnedBookMetadataResponse;
 
@@ -73,7 +75,7 @@ export class KindleBook {
    * Fires 2 http requests under the hood if previous details not given.
    */
   async fullDetails(
-    partialDetails?: KindleBookLightDetails,
+    partialDetails?: KindleBookLightDetails
   ): Promise<KindleBookDetails> {
     const info = partialDetails ?? (await this.details());
     const response = await this.#client.request(info.metadataUrl);

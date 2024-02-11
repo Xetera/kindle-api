@@ -1,8 +1,11 @@
 {
-  "extends": "./tsconfig.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "dist/cjs",
-    "target": "es2021"
-  }
+    "target": "es2021",
+    "moduleResolution": "Node"
+  },
+  "include": ["src"],
+  "exclude": ["**/*.spec.ts", "**/__test__/**"]
 }

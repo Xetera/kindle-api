@@ -1,7 +1,7 @@
-import { KindleBook, KindleBookData } from "./book";
-import { HttpClient } from "./http-client";
-import { Kindle } from "./kindle";
-import { Query, Filter } from "./query-filter";
+import { KindleBook, KindleBookData } from "./book.js";
+import { HttpClient } from "./http-client.js";
+import { Kindle } from "./kindle.js";
+import { Query, Filter } from "./query-filter.js";
 
 export async function fetchBooks(
   client: HttpClient,

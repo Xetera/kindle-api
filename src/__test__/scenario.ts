@@ -1,5 +1,5 @@
 import isEqual from "lodash.isequal";
-import { server } from "./setup.msw";
+import { server } from "./setup.msw.js";
 import { HttpResponse, http } from "msw";
 import { diffString } from "json-diff";
 

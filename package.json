@@ -2,35 +2,35 @@
   "name": "kindle-api",
   "license": "MIT",
   "version": "1.4.0",
-  "type": "commonjs",
-  "types": "./dist/kindle.d.ts",
+  "type": "module",
+  "types": "./dist/esm/kindle.d.ts",
   "main": "./dist/cjs/kindle.js",
-  "module": "./dist/kindle.js",
+  "module": "./dist/esm/kindle.js",
   "exports": {
     ".": {
-      "import": "./dist/kindle.js",
-      "require": "./dist/cjs/kindle.js"
+      "import": "./dist/esm/kindle.js",
+      "require": "./dist/cjs/kindle.js",
+      "types": "./dist/esm/kindle.d.ts"
     }
   },
   "scripts": {
     "dev": "pnpm run build:dev",
-    "build": "esbuild src/*.ts --platform=node --format=esm --outdir=dist --target=es2021",
-    "build:cjs": "esbuild src/*.ts --platform=node --format=cjs --outdir=dist/cjs --target=es2021",
+    "build": "tsc -p ./tsconfig.esm.json",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json",
     "build:all": "pnpm run build && pnpm build:cjs && sh ./fixup.sh",
     "build:dev": "pnpm run build --watch",
-    "build:production": "tsc && tsc -p tsconfig.cjs.json && pnpm run build:all",
-    "test": "DOTENV_CONFIG_PATH=./.env.test NODE_OPTIONS='-r dotenv/config'  vitest --threads=false"
+    "build:production": "pnpm run build:all",
+    "test": "DOTENV_CONFIG_PATH=./.env.test NODE_OPTIONS='-r dotenv/config'  vitest"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.3.1",
     "@types/json-diff": "^1.0.3",
     "@types/lodash.isequal": "^4.5.8",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.16.17",
     "json-diff": "^1.0.6",
     "lodash.isequal": "^4.5.0",
-    "msw": "^2.1.2",
+    "msw": "^2.1.7",
     "typescript": "^4.9.3",
-    "vitest": "^0.27.1"
+    "vitest": "^1.2.2"
   }
 }

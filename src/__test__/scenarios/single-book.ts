@@ -1,7 +1,7 @@
-import { Scenario } from "../scenario";
-import { sample1, sample1Details, sample1MetaData } from "./fixtures/books";
-import { defaultRequestBody } from "./fixtures/default-request-body";
-import { sessionToken } from "./fixtures/tokens";
+import { Scenario } from "../scenario.js";
+import { sample1, sample1Details, sample1MetaData } from "./fixtures/books.js";
+import { defaultRequestBody } from "./fixtures/default-request-body.js";
+import { sessionToken } from "./fixtures/tokens.js";
 
 export const singleBook = {
   getBookDetails: {
