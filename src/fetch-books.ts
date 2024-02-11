@@ -29,8 +29,8 @@ export async function fetchBooks(
   };
 }
 
-export function toUrl(query: Query, filter: Filter): string {
-  const url = new URL(Kindle.BOOKS_URL);
+export function toUrl(baseUrl: string, query: Query, filter: Filter): string {
+  const url = new URL(`${baseUrl}/${Kindle.BOOKS_PATH}`);
   const searchParams = {
     ...query,
     ...filter,
