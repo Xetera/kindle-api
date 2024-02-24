@@ -188,6 +188,7 @@ export class Kindle {
       const { books, sessionId, paginationToken } = await fetchBooks(
         client,
         url,
+        baseUrl,
         version
       );
 

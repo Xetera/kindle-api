@@ -6,6 +6,7 @@ import { Query, Filter } from "./query-filter.js";
 export async function fetchBooks(
   client: HttpClient,
   url: string,
+  baseUrl: string,
   version?: string
 ): Promise<{
   books: KindleBook[];
@@ -23,7 +24,9 @@ export async function fetchBooks(
 
   const body = JSON.parse(resp.body) as Response;
   return {
-    books: body.itemsList.map((book) => new KindleBook(book, client, version)),
+    books: body.itemsList.map(
+      (book) => new KindleBook(book, client, baseUrl, version)
+    ),
     sessionId,
     paginationToken: body.paginationToken,
   };
