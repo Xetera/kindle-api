@@ -9,10 +9,12 @@ export function unexpectedResponse({
   startSessionResponse,
   getBookDetailsResponse,
   getBookMetaDataResponse,
+  getDeviceTokenResponse,
 }: {
   startSessionResponse?: TLSClientResponseData;
   getBookDetailsResponse?: TLSClientResponseData;
   getBookMetaDataResponse?: TLSClientResponseData;
+  getDeviceTokenResponse?: TLSClientResponseData;
 }) {
   return {
     startSession: {
@@ -59,7 +61,7 @@ export function unexpectedResponse({
       response: {
         status: 200,
         headers: {},
-        body: {
+        body: getDeviceTokenResponse ?? {
           status: 200,
           cookies: {
             "session-id": faker.string.uuid(),

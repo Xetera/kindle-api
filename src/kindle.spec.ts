@@ -150,6 +150,35 @@ describe("unexpected response errors", () => {
     }
   );
 
+  test.each([409])(
+    "should throw when device token response status is unexpected %s",
+    async (status) => {
+      // given
+      const response = {
+        headers: {},
+        status,
+        body: "{}",
+        cookies: {},
+        target: faker.internet.url(),
+      } satisfies TLSClientResponseData;
+      useScenario(unexpectedResponse({ getDeviceTokenResponse: response }));
+
+      // when
+      const error = await getError(
+        async (): Promise<unknown> => await Kindle.fromConfig(config())
+      );
+
+      // then
+      expect(error).toBeInstanceOf(UnexpectedResponseError);
+      expect(error).toEqual(
+        expect.objectContaining({
+          message: `Unexpected status code: ${status}`,
+          response,
+        })
+      );
+    }
+  );
+
   test.each([400])(
     "should throw when book details response status is unexpected %s",
     async (status) => {
