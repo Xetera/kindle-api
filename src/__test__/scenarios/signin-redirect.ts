@@ -1,5 +1,5 @@
-import { TLSClientResponseData } from "../../kindle";
-import { unexpectedResponse } from "./unexpected-response";
+import { TLSClientResponseData } from "../../kindle.js";
+import { unexpectedResponse } from "./unexpected-response.js";
 
 export function signinRedirect() {
   const response = {
@@ -15,5 +15,5 @@ export function signinRedirect() {
       "https://read.amazon.com/kindle-library/search?query=&libraryType=BOOKS&sortType=acquisition_desc&querySize=50",
   } satisfies TLSClientResponseData;
 
-  return unexpectedResponse({ response });
+  return unexpectedResponse({ startSessionResponse: response });
 }
