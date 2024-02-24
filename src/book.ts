@@ -17,8 +17,14 @@ export class KindleBook {
 
   readonly #client: HttpClient;
   readonly #version: string;
+  readonly #baseUrl: string;
 
-  constructor(options: KindleBookData, client: HttpClient, version?: string) {
+  constructor(
+    options: KindleBookData,
+    client: HttpClient,
+    baseUrl: string,
+    version?: string
+  ) {
     this.title = options.title;
     this.authors = KindleBook.normalizeAuthors(options.authors);
     this.imageUrl = options.productUrl;
@@ -31,6 +37,7 @@ export class KindleBook {
 
     this.#client = client;
     this.#version = version ?? "2000010";
+    this.#baseUrl = baseUrl;
   }
 
   /**
@@ -41,7 +48,7 @@ export class KindleBook {
    */
   async details(): Promise<KindleBookLightDetails> {
     const response = await this.#client.request(
-      `https://read.amazon.com/service/mobile/reader/startReading?asin=${
+      `${this.#baseUrl}/service/mobile/reader/startReading?asin=${
         this.asin
       }&clientVersion=${this.#version}`
     );
