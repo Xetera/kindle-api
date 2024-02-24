@@ -10,7 +10,7 @@ export interface RequestResponsePair {
     body?: any;
   };
   response: {
-    headers: Record<string, string>;
+    headers: Record<string, string | string[]>;
     body?: any;
     status: number;
 

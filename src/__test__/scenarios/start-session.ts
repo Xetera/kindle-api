@@ -20,6 +20,7 @@ export function startSession({ books }: { books?: KindleBookData[] } = {}) {
         headers: {},
         status: 200,
         body: {
+          status: 200,
           cookies: {
             "session-id": "2",
           },
@@ -50,6 +51,7 @@ export function startSession({ books }: { books?: KindleBookData[] } = {}) {
         status: 200,
         headers: {},
         body: {
+          status: 200,
           cookies: {
             "session-id": faker.string.uuid(),
           },

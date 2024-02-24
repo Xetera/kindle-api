@@ -3,6 +3,7 @@ import {
   KindleOwnedBookMetadataResponse,
 } from "./book-metadata.js";
 import { HttpClient } from "./http-client.js";
+import { UnexpectedResponseError } from "./kindle.js";
 
 export class KindleBook {
   public readonly title: string;
@@ -45,6 +46,10 @@ export class KindleBook {
         this.asin
       }&clientVersion=${this.#version}`
     );
+    if (!UnexpectedResponseError.isOk(response)) {
+      throw UnexpectedResponseError.unexpectedStatusCode(response);
+    }
+
     const info = JSON.parse(response.body) as KindleOwnedBookMetadataResponse;
 
     return {
@@ -79,6 +84,10 @@ export class KindleBook {
   ): Promise<KindleBookDetails> {
     const info = partialDetails ?? (await this.details());
     const response = await this.#client.request(info.metadataUrl);
+
+    if (!UnexpectedResponseError.isOk(response)) {
+      throw UnexpectedResponseError.unexpectedStatusCode(response);
+    }
 
     const meta =
       this.#client.parseJsonpResponse<KindleBookMetadataResponse>(response);

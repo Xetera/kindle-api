@@ -23,6 +23,7 @@ export const singlePages = {
       headers: {},
       status: 200,
       body: {
+        status: 200,
         cookies: {
           "session-id": "2",
         },

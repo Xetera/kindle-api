@@ -1,4 +1,5 @@
 import { KindleBook } from "./book.js";
+import { UnexpectedResponseError } from "./errors/unexpected-response-error.js";
 import { fetchBooks, toUrl } from "./fetch-books.js";
 import {
   KindleRequiredCookies,
@@ -28,6 +29,9 @@ export type {
   TLSClientRequestPayload,
   TLSClientResponseData,
 } from "./tls-client-api.js";
+
+export { AuthSessionError } from "./errors/auth-session-error.js";
+export { UnexpectedResponseError } from "./errors/unexpected-response-error.js";
 
 export type KindleConfiguration = {
   /**
@@ -131,6 +135,11 @@ export class Kindle {
     });
     const url = `${Kindle.DEVICE_TOKEN_URL}?${params.toString()}`;
     const response = await client.request(url);
+
+    if (!UnexpectedResponseError.isOk(response)) {
+      throw UnexpectedResponseError.unexpectedStatusCode(response);
+    }
+
     return JSON.parse(response.body) as KindleDeviceInfo;
   }
 
